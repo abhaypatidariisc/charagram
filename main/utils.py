@@ -5,7 +5,7 @@ from random import randint
 from random import choice
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
-import cPickle
+import pickle as cPickle
 from evaluate import evaluate_wordsim
 from evaluate import evaluate_sentencesim
 
@@ -15,8 +15,8 @@ def check_if_quarter(idx, n):
     return False
 
 def save_params(model, fname):
-    f = file(fname, 'wb')
-    cPickle.dump(model.all_params, f, protocol=cPickle.HIGHEST_PROTOCOL)
+    with open(fname, 'wb') as f:
+        cPickle.dump(model.all_params, f, protocol=cPickle.HIGHEST_PROTOCOL)
     f.close()
 
 def count_parameters(model):
@@ -63,7 +63,7 @@ def get_ppdb_data(f):
                 e = (tree(i[0]), tree(i[1]))
                 examples.append(e)
             else:
-                print i
+                print(i)
     return examples
 
 def get_pos_data(f):
@@ -225,7 +225,7 @@ def train(model, data, params):
 
     counter = 0
     try:
-        for eidx in xrange(params.epochs):
+        for eidx in range(params.epochs):
 
             kf = None
             if eidx == 0 and params.shuffle1 == False:
@@ -253,7 +253,7 @@ def train(model, data, params):
                     cost = model.train_function(g1x, g2x, p1x, p2x)
 
                 if np.isnan(cost) or np.isinf(cost):
-                    print 'NaN detected'
+                    print('NaN detected')
 
                 if (check_if_quarter(uidx, len(kf))):
                     if (params.save):
@@ -285,10 +285,10 @@ def train(model, data, params):
                 elif params.domain == "sentence":
                     evaluate_sentencesim(model, params)
 
-            print 'Epoch ', (eidx + 1), 'Cost ', cost
+            print('Epoch ', (eidx + 1), 'Cost ', cost)
 
     except KeyboardInterrupt:
-        print "Training interrupted"
+        print("Training interrupted")
 
     end_time = time.time()
-    print "total time:", (end_time - start_time)
+    print("total time:", (end_time - start_time))

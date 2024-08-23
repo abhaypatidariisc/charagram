@@ -49,7 +49,7 @@ class pos_tagging(object):
         elif params.nntype == "charagram":
             char = T.matrix()
             self.featuremap = self.get_feature_map(data, params.featuretype, params.cutoff, params.lowercase)
-            print "Number of features: ", len(self.featuremap)
+            print("Number of features: ", len(self.featuremap))
 
             l_in_char = lasagne.layers.InputLayer((None, len(self.featuremap)+1))
             if self.cap:
@@ -254,7 +254,7 @@ class pos_tagging(object):
             ct = d[i]
             if ct >= cutoff:
                 if gr in feature_map:
-                    print "Error: feature overlap"
+                    print("Error: feature overlap")
                     continue
                 feature_map[gr] = idx
                 idx += 1
@@ -371,7 +371,7 @@ class pos_tagging(object):
         start_time = time.time()
         counter = 0
         try:
-            for eidx in xrange(params.epochs):
+            for eidx in range(params.epochs):
 
                 kf = utils.get_minibatches_idx(len(train), params.batchsize, shuffle=True)
 
@@ -404,7 +404,7 @@ class pos_tagging(object):
                         cost = self.train_function(char_hash, x, xmask, idxs, y)
 
                     if np.isnan(cost) or np.isinf(cost):
-                        print 'NaN detected'
+                        print('NaN detected')
 
                     #print 'Epoch ', (eidx+1), 'Update ', (uidx+1), 'Cost ', cost
 
@@ -416,12 +416,12 @@ class pos_tagging(object):
                     devscore = self.evaluate(dev, params)
                     testscore = self.evaluate(test, params)
                     trainscore = self.evaluate(train, params)
-                    print "accuracy: ", devscore, testscore, trainscore
+                    print("accuracy: ", devscore, testscore, trainscore)
 
-                print 'Epoch ', (eidx+1), 'Cost ', cost
+                print('Epoch ', (eidx+1), 'Cost ', cost)
 
         except KeyboardInterrupt:
-            print "Training interrupted"
+            print("Training interrupted")
 
         end_time = time.time()
-        print "total time:", (end_time - start_time)
+        print("total time:", (end_time - start_time))
